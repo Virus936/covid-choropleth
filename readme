@@ -1,0 +1,9 @@
+jour 1 :
+la difficulté reside dans le fait que les données viennent de deux sources différente :
+    - le nombre de mort lié au covid sur un fichier (data.gouv.fr)
+    - le geoJSON qui permet de faire les polygone sur la carte sont sur un autre fichier
+
+en plus le format csv et javascript n'est pas top donc j'ai du faire un traitement sur les données. C'est quand meme plus facile avec sql ou pandas(python)
+malheureusement les données de data.gouv.fr ne sont pas en rest api comme d'autres api le font. Ça aurait été surement plus simple. il me reste a faire les legendes avec des couleurs pour faire jolie ;) 
+
+#ROADTODEV
