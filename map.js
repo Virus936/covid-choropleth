@@ -66,6 +66,28 @@ function getData4map(csv,date){
     return result; //JSON
 }
 
+function style(feature) {
+    return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 1,
+        fillColor: getColor(feature.properties.hosp),
+    } 
+}
+ 
+function getColor(d) {
+    return d > 1050 ? '#800026' :
+        d > 900  ? '#BD0026' :
+        d > 750  ? '#E31A1C' :
+        d > 600  ? '#FC4E2A' :
+        d > 450   ? '#FD8D3C' :
+        d > 300   ? '#FEB24C' :
+        d > 150   ? '#FED976' :
+        '#FFEDA0';
+}
+
 function loadDoc() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -76,14 +98,7 @@ function loadDoc() {
             // Mise en place des polygone departement
             geojson = L.geoJson(data, {
                 onEachFeature : onEachFeature,
-                style : {
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 1,
-                    fillColor:'lightblue',
-                },
+                style : style,
             }).addTo(mymap);
 
         }
@@ -100,7 +115,7 @@ mymap.fitBounds(bounds);
 
 L.tileLayer('', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors,',
-    minZoom: 6,
+    minZoom: 4,
     maxZoom: 10,
     tileSize: 512,
     zoomOffset: -1,
@@ -108,7 +123,23 @@ L.tileLayer('', {
 }).addTo(mymap);
 
 
+var legend = L.control({position: 'bottomright'})
 
+legend.onAdd = function(map) {
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 150, 300, 450, 600, 750, 900, 1050];
+
+    div.innerHTML += '<h6>Nombre de personne hospitalisé</h6>';
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor((grades[i] + 1) ) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? ' - ' + grades[i + 1] + ' <br>' : '+');
+    }
+
+    return div;
+}
+
+legend.addTo(mymap)
 
 var info = L.control();
 
